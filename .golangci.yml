@@ -1,0 +1,25 @@
+linters:
+  enable:
+    - bodyclose
+    - goconst
+    - gofmt
+    - goimports
+    - gosec
+    - misspell
+  fast: true
+
+linters-settings:
+#  goconst:
+#    min-occurences: 24
+#  gosec:
+#    excludes:
+#      - G404
+#      - G101
+
+run:
+  timeout: 3m
+
+  # won't be reported. Default value is empty list
+  skip-dirs:
+    - esi
+  # skip-files:

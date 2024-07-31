@@ -1,0 +1,28 @@
+{
+    "log_level": "info",
+    "force_sde_download": false,
+    "region_id": 10000002,
+    "broker_fee_buy": 0.005,
+    "broker_fee_sell": 0.015,
+    "sales_tax": 0.0202,
+    "history_days": 7,
+    "filters": {
+        "low_isk_boundary": 10,
+        "high_isk_boundary": 100000000000,
+        "min_lpdp": 100000000,
+        "min_volume":5,
+        "min_profit_margin": 0.05,
+        "max_center_offset": 0.5,
+        "max_flippers": 100,
+        "min_score": 0
+    },
+    "exclude_groups": {
+        "skins": true,
+        "wearables": true,
+        "skillbooks": true,
+        "blueprints": true,
+        "skinr": true,
+        "crates": true,
+        "deprecated": true
+    }
+}
