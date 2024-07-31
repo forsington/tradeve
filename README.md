@@ -64,7 +64,8 @@ To run, TradEVE is dependent on two files.
 * A settings file, rename `config.json.example` to `config.json`, and fill in the parameters you wish to use.
 
 ### Installing
-Installation can be done by either downloading the executable of the latest release [from Github](https://github.com/forsington/tradeve/releases), or by cloning the project and compiling from source: `make build` and then running `./bin/tradeve`.
+Installation can be done by cloning the project and compiling from source: `make build` and then running `./bin/tradeve`. Requires [golang](https://golang.org/) to be installed.
+
 
 ### Configuration
 See [config.json.example](config.json.example) for an example of the settings file:
