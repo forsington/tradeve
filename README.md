@@ -72,7 +72,7 @@ See [config.json.example](config.json.example) for an example of the settings fi
 
 ```json
 {
-    "region_id": 10000002,
+    "region": "The Forge",
     "cache_enabled": true,
     "force_sde_download": false,
     "broker_fee_buy": 0.005,
@@ -107,7 +107,7 @@ See [config.json.example](config.json.example) for an example of the settings fi
 | **log_level**                  | Logging level (options: "debug", "info", "warn", "error").     | "info"                        |
 | **cache_enabled**              | Enable caching of ESI data.                                    | true                          |
 | **force_sde_download**         | Force download of the EVE SDE file at startup.                 | false                         |
-| **region_id**                  | Specifies the region ID for trading.                           | 10000002                      |
+| **region**                     | Specifies the region for trading.                              | The Forge                     |
 | **broker_fee_buy**             | Broker fee percentage for buy orders.                          | 0.005 (0.5% @ a freeport)     |
 | **broker_fee_sell**            | Broker fee percentage for sell orders.                         | 0.015 (1.5% (calculate [here](https://www.qsna.eu/eve/pilot-services/taxes))                  |
 | **sales_tax**                  | Sales tax percentage for sell orders.                          | 0.0202 (2.02% @ Accounting V) |

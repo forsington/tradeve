@@ -2,7 +2,7 @@
     "log_level": "info",
     "cache_enabled": true,
     "force_sde_download": false,
-    "region_id": 10000002,
+    "region": "The Forge",
     "broker_fee_buy": 0.005,
     "broker_fee_sell": 0.015,
     "sales_tax": 0.0202,
