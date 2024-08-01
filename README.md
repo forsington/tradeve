@@ -2,22 +2,28 @@
 
 A trading utility for Eve Online. Uses ESI, written in golang.
 
-TradEVE is a command-line application designed to assist station traders in Eve Online by identifying lucrative items for flip trading.
+TradEVE is a command-line application for station traders in Eve Online that identifies lucrative items to flip trade.
+
+## Disclaimer
+Why not keep it private? Well, all this info is freely available in ESI and there are already several great tools that do similar things. This was just a fun project where I could tweak the analysis to just how I wanted it. At the core, it does basically the same thing as can be done manually by checking the in-game market for [Burger factors](https://wiki.eveuniversity.org/Identifying_items_for_trade) manually, but for all items in the game at once.
+
+There are no guarantees that the items identified by TradEVE will be profitable. There are probably factors that I have not considered that could affect the profitability of an item. For example items that suddenly spike in price due to a massive order show up a lot, even if the price has already correct back to the mean. The analysis should be used as a starting point for further research and not as a definitive answer.
 
 ## How it works
-Station traders place buy orders for items and, once fulfilled, list them as sell orders. When the sell order executes, traders profit from the difference between the buy and sell prices (a.k.a. arbitrage), after deducting broker fees and sales tax.
+Station traders place buy orders for items and, once fulfilled, list them as sell orders. When the sell order executes, traders profit from the difference between the buy and sell prices after deducting broker fees and sales tax.
 
-TradEVE evaluates items based on three key factors:
+TradEVE evaluates items based on four key factors:
 * **Profit Margin** - The average profitability of flip trading an item over the past X days, after accounting for taxes and trading fees.
 * **LPDP - Largets Possible Daily Profit** - LPDP is calculated by taking the spread between an item's low and high prices for a day (bid-ask spread), subtracting taxes and fees, multiplying by the daily volume sold, and dividing by 2 to account for both buy and sell orders. This indicates the maximum potential profit from trading an item daily, highlighting opportunities to earn significant ISK.
 * **Max center offset** - This factor ensures a balanced spread between buy and sell orders, which is crucial for reliable flip trading. High offset suggests that an item is predominantly traded in one direction (either sold to buy orders or bought from sell orders), which is not ideal for flipping.
+* **Flippers** - The number of competing traders who have updated orders in the last 24 hours (buy and sell included). A high number of flippers indicates a competitive market, which can reduce profit margins due to update broker's fees eating up the margin.
 
 ### Data collection
-TradEVE fetches data from the [EVE Swagger Interface (ESI)](https://esi.evetech.net/), which provides access to the Eve Online game data. The application retrieves the following data for each item:
+TradEVE fetches data from the [EVE Swagger Interface (ESI)](https://esi.evetech.net/), which provides access to the following Eve Online in-game data:
 * **Market History** - The daily high, low, and average prices for an item over the past X days.
 * **Market Orders** - The current buy and sell orders for an item, including the price, volume, and order type.
 
-This data is cached in a local Bolt database to speed up subsequent runs. Delete the file `bolt.db` to flush the cache and force a re-fetch of all data.
+This data is cached in a local [BoltDB](github.com/boltdb/bolt) database to speed up subsequent runs. Delete the file `bolt.db` to flush the cache and force a re-fetch of all data, or use `--no-cache` to ignore it for a single run.
 
 ### Analysis
 After market data has been scraped from ESI, TradEVE calculates the profit margin, LPDP, and max center offset for each item. The application then filters out items that do not meet the user-defined criteria (e.g., minimum profit margin, minimum volume, etc.).
@@ -151,6 +157,5 @@ Feel free to help out with any of the issues listed [on the issues page](https:/
 MIT (see [LICENSE.md](LICENSE.md))
 
 ## Todo
-- [ ] [Burger factors](https://wiki.eveuniversity.org/Identifying_items_for_trade)
-    - [ ] Stable 20 day average price
+- [ ] Check for stable 20 day average price (add a configurable daily swing factor, currently hard-coded to 50%)
 - [ ] Use actual highs and lows from order book rather than aggregated history, exclude a few percent of volume closest to the spread
