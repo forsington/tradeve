@@ -5,7 +5,7 @@ A trading utility for Eve Online. Uses ESI, written in golang.
 TradEVE is a command-line application for station traders in Eve Online that identifies lucrative items to flip trade.
 
 ## Disclaimer
-Why not keep it private? Well, all this info is freely available in ESI and there are already several great tools that do similar things. This was just a fun project where I could tweak the analysis to just how I wanted it. At the core, it does basically the same thing as can be done manually by checking the in-game market for [Burger factors](https://wiki.eveuniversity.org/Identifying_items_for_trade) manually, but for all items in the game at once.
+Why not keep it private? Well, all this info is freely available in ESI and there are already several great tools that do similar things. This was just a fun project where I could tweak the analysis to just how I wanted it. At the core, it does basically the same thing as can be done manually by checking the in-game market for [Burger factors](https://wiki.eveuniversity.org/Identifying_items_for_trade), but for all items in the game at once.
 
 There are no guarantees that the items identified by TradEVE will be profitable. There are probably factors that I have not considered that could affect the profitability of an item. For example items that suddenly spike in price due to a massive order show up a lot, even if the price has already correct back to the mean. The analysis should be used as a starting point for further research and not as a definitive answer.
 
