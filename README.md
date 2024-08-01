@@ -60,8 +60,8 @@ Analysis complete. 10 items match criteria over the last 3 days (daily average):
 ### Prerequisits
 To run, TradEVE is dependent on two files.
 
-* The EVE SDE file `invTypes.csv`, which will be fetched automatically from [Fuzzwork](https://www.fuzzwork.co.uk/dump/latest/) at application start, if it does not already exist in the directory. Force a re-fetch by deleting the file or by using the `-f` flag.
 * A settings file, rename `config.json.example` to `config.json`, and fill in the parameters you wish to use.
+* The EVE SDE file `invTypes.csv`, which will be fetched automatically from [Fuzzwork](https://www.fuzzwork.co.uk/dump/latest/) at application start, if it does not already exist in the directory. Force a re-fetch by deleting the file or by using the `-f` flag.
 
 ### Installing
 Installation can be done by cloning the project and compiling from source: `make build` and then running `./bin/tradeve`. Requires [golang](https://golang.org/) to be installed.
