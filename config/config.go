@@ -217,6 +217,10 @@ func (c *Configuration) Validate() error {
 		return fmt.Errorf("history days must be at least 1")
 	}
 
+	return c.ValidateFilters()
+}
+
+func (c *Configuration) ValidateFilters() error {
 	if c.Filters.LowIskBoundary <= 0 {
 		return fmt.Errorf("low isk boundary must be at least 0")
 	}
