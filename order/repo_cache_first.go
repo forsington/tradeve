@@ -7,7 +7,7 @@ type CacheFirstRepository struct {
 	esiRepository   Repository
 }
 
-func NewCacheFirstRepository(cacheRepository, esiRepository Repository) *CacheFirstRepository {
+func NewCacheFirstRepository(cacheRepository, esiRepository Repository) Repository {
 	return &CacheFirstRepository{
 		cacheRepository: cacheRepository,
 		esiRepository:   esiRepository,

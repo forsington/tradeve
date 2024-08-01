@@ -12,6 +12,10 @@ import (
 
 type Configuration struct {
 	LogLevel string `json:"log_level"`
+
+	// CacheEnabled ESI responses
+	CacheEnabled bool `json:"cache_enabled"`
+
 	// Download the SDE file even if it exists
 	ForceSDEDownload bool `json:"force_sde_download"`
 
@@ -67,6 +71,7 @@ func (c *Configuration) HighIskString() string {
 func DefaultConfig() *Configuration {
 	config := &Configuration{
 		LogLevel:         "info",
+		CacheEnabled:     true,
 		ForceSDEDownload: false,
 		RegionId:         10000002,
 		BrokerFeeBuy:     0.005,
@@ -103,6 +108,7 @@ func DefaultConfig() *Configuration {
 // PartialConfiguration is used for unmarshaling and selectively updating
 type PartialConfiguration struct {
 	LogLevel         *string        `json:"log_level"`
+	CacheEnabled     *bool          `json:"cache_enabled"`
 	ForceSdeDownload *bool          `json:"force_sde_download"`
 	RegionId         *int           `json:"region_id"`
 	BrokerFeeBuy     *float64       `json:"broker_fee_buy"`
@@ -126,6 +132,9 @@ func ParseConfigFile(configFileName string, config *Configuration) (*Configurati
 	// Update fields only if they are not nil
 	if partial.LogLevel != nil {
 		config.LogLevel = *partial.LogLevel
+	}
+	if partial.CacheEnabled != nil {
+		config.CacheEnabled = *partial.CacheEnabled
 	}
 	if partial.ForceSdeDownload != nil {
 		config.ForceSDEDownload = *partial.ForceSdeDownload
@@ -163,6 +172,7 @@ func ParseConfigFile(configFileName string, config *Configuration) (*Configurati
 func ParseFlags(config *Configuration) *Configuration {
 	fDebug := flag.Bool("d", false, "Debug mode")
 	fForceSDEDownload := flag.Bool("f", false, "Force download of SDE file")
+	fNoCache := flag.Bool("no-cache", false, "Disable cache")
 
 	flag.Parse()
 
@@ -170,7 +180,13 @@ func ParseFlags(config *Configuration) *Configuration {
 		config.LogLevel = "DEBUG"
 	}
 
-	config.ForceSDEDownload = *fForceSDEDownload
+	if *fForceSDEDownload {
+		config.ForceSDEDownload = true
+	}
+
+	if *fNoCache {
+		config.CacheEnabled = false
+	}
 
 	return config
 }

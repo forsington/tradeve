@@ -77,7 +77,7 @@ func (r *BoltRepository) initHistoryBucket() error {
 	return nil
 }
 
-func NewBoltRepository(db *bolt.DB, logger hclog.Logger) (*BoltRepository, error) {
+func NewBoltRepository(db *bolt.DB, logger hclog.Logger) (Repository, error) {
 	r := &BoltRepository{
 		db:     db,
 		logger: logger,
@@ -90,8 +90,4 @@ func NewBoltRepository(db *bolt.DB, logger hclog.Logger) (*BoltRepository, error
 	}
 
 	return r, nil
-}
-
-func (r *BoltRepository) Stop() {
-	r.db.Close()
 }
