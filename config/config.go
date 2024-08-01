@@ -8,6 +8,7 @@ import (
 	"os"
 
 	"github.com/dustin/go-humanize"
+	"github.com/hashicorp/go-hclog"
 	"github.com/pkg/errors"
 )
 
@@ -192,6 +193,59 @@ func ParseFlags(config *Configuration) *Configuration {
 }
 
 func (c *Configuration) Validate() error {
+	if hclog.LevelFromString(c.LogLevel) == hclog.NoLevel {
+		return fmt.Errorf("log level %s is not valid", c.LogLevel)
+	}
+
+	if c.Region == "" {
+		return fmt.Errorf("region is required")
+	}
+
+	if c.BrokerFeeBuy < 0 || c.BrokerFeeBuy > 1 {
+		return fmt.Errorf("broker fee buy must be between 0 and 1, got %f", c.BrokerFeeBuy)
+	}
+
+	if c.BrokerFeeSell < 0 || c.BrokerFeeSell > 1 {
+		return fmt.Errorf("broker fee sell must be between 0 and 1, got %f", c.BrokerFeeSell)
+	}
+
+	if c.SalesTax < 0 || c.SalesTax > 1 {
+		return fmt.Errorf("sales tax must be between 0.0202 and 1, got %f", c.SalesTax)
+	}
+
+	if c.HistoryDays < 1 {
+		return fmt.Errorf("history days must be at least 1")
+	}
+
+	return c.ValidateFilters()
+}
+
+func (c *Configuration) ValidateFilters() error {
+	if c.Filters.LowIskBoundary <= 0 {
+		return fmt.Errorf("low isk boundary must be at least 0")
+	}
+	if c.Filters.HighIskBoundary < 0 {
+		return fmt.Errorf("high isk boundary must be at least 0")
+	}
+	if c.Filters.MinLPDP < 0 {
+		return fmt.Errorf("min lpdp must be at least 0")
+	}
+	if c.Filters.MinVolume <= 0 {
+		return fmt.Errorf("min volume must be at least 0")
+	}
+	if c.Filters.MinProfitMargin <= 0 {
+		return fmt.Errorf("min profit margin must be at least 0")
+	}
+	if c.Filters.MaxCenterOffset <= 0 {
+		return fmt.Errorf("max center offset must be at least 0")
+	}
+	if c.Filters.MaxFlippers <= 0 {
+		return fmt.Errorf("max flippers must be at least 0")
+	}
+	if c.Filters.MinScore <= 0 {
+		return fmt.Errorf("min score must be at least 0")
+	}
+
 	return nil
 }
 

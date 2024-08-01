@@ -25,6 +25,12 @@ func main() {
 
 	conf = config.ParseFlags(conf)
 
+	err = conf.Validate()
+	if err != nil {
+		fmt.Printf("error validating config: %s\n", err)
+		os.Exit(1)
+	}
+
 	logger := hclog.New(&hclog.LoggerOptions{
 		Name:  "tradeve",
 		Level: hclog.LevelFromString(conf.LogLevel),
