@@ -73,6 +73,7 @@ See [config.json.example](config.json.example) for an example of the settings fi
 ```json
 {
     "region_id": 10000002,
+    "cache_enabled": true,
     "force_sde_download": false,
     "broker_fee_buy": 0.005,
     "broker_fee_sell": 0.015,
@@ -104,6 +105,7 @@ See [config.json.example](config.json.example) for an example of the settings fi
 | Variable                       | Description                                                    | Default Value                 |
 |--------------------------------|----------------------------------------------------------------|----------------------         |
 | **log_level**                  | Logging level (options: "debug", "info", "warn", "error").     | "info"                        |
+| **cache_enabled**              | Enable caching of ESI data.                                    | true                          |
 | **force_sde_download**         | Force download of the EVE SDE file at startup.                 | false                         |
 | **region_id**                  | Specifies the region ID for trading.                           | 10000002                      |
 | **broker_fee_buy**             | Broker fee percentage for buy orders.                          | 0.005 (0.5% @ a freeport)     |

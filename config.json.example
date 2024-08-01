@@ -1,5 +1,6 @@
 {
     "log_level": "info",
+    "cache_enabled": true,
     "force_sde_download": false,
     "region_id": 10000002,
     "broker_fee_buy": 0.005,

@@ -11,7 +11,7 @@ type ESIRepository struct {
 	client *esi.Client
 }
 
-func NewESIRepository(client *esi.Client) *ESIRepository {
+func NewESIRepository(client *esi.Client) Repository {
 	return &ESIRepository{
 		client: client,
 	}

@@ -10,7 +10,7 @@ type ESIRepository struct {
 	ESI *esi.Client
 }
 
-func NewESIRepository(esi *esi.Client) *ESIRepository {
+func NewESIRepository(esi *esi.Client) Repository {
 	return &ESIRepository{
 		ESI: esi,
 	}

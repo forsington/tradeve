@@ -44,35 +44,38 @@ func main() {
 		os.Exit(0)
 	}
 
-	// BoltDB
-	// Open the data file in your current directory.
-	// It will be created if it doesn't exist.
-	db, err := bolt.Open("bolt.db", 0600, nil)
-	if err != nil {
-		logger.Error("error setting upp boltdb", "error", err)
-		return
+	historyRepo := history.NewESIRepository(esiClient)
+	orderRepo := order.NewESIRepository(esiClient)
+
+	if conf.CacheEnabled {
+		// BoltDB
+		// Open the data file in the current directory.
+		// It will be created if it doesn't exist.
+		db, err := bolt.Open("bolt.db", 0600, nil)
+		if err != nil {
+			logger.Error("error setting upp boltdb", "error", err)
+			os.Exit(1)
+		}
+		defer db.Close()
+
+		// A history repository that will first check the cache and then the ESI API
+		boltHistoryRepo, err := history.NewBoltRepository(db, logger)
+		if err != nil {
+			logger.Error("error creating boltdb repo", "error", err)
+			return
+		}
+		historyRepo = history.NewCacheFirstRepository(boltHistoryRepo, historyRepo)
+
+		// An order repository that will first check the cache and then the ESI API
+		boltOrderRepo, err := order.NewBoltRepository(db, logger)
+		if err != nil {
+			logger.Error("error creating boltdb repo", "error", err)
+			return
+		}
+		orderRepo = order.NewCacheFirstRepository(boltOrderRepo, orderRepo)
 	}
 
-	// History service
-	boltHistoryRepo, err := history.NewBoltRepository(db, logger)
-	if err != nil {
-		logger.Error("error creating boltdb repo", "error", err)
-		return
-	}
-	defer boltHistoryRepo.Stop()
-	esiRepo := history.NewESIRepository(esiClient)
-	historyRepo := history.NewCacheFirstRepository(boltHistoryRepo, esiRepo)
 	historyService := history.NewService(logger, historyRepo)
-
-	// Order serivce
-	orderEsiRepo := order.NewESIRepository(esiClient)
-	boltOrderRepo, err := order.NewBoltRepository(db, logger)
-	if err != nil {
-		logger.Error("error creating boltdb repo", "error", err)
-		return
-	}
-	defer boltOrderRepo.Stop()
-	orderRepo := order.NewCacheFirstRepository(boltOrderRepo, orderEsiRepo)
 	orderService := order.NewService(orderRepo)
 
 	// Item service
