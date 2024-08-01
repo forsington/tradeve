@@ -1,8 +1,6 @@
 package main
 
 import (
-	"bytes"
-	"encoding/json"
 	"fmt"
 	"os"
 	"time"
@@ -32,8 +30,7 @@ func main() {
 		Level: hclog.LevelFromString(conf.LogLevel),
 	})
 	logger.Debug("config read", "file", "config.json")
-	confJson, _ := prettyJson(conf)
-	fmt.Printf("config read: \n%s\n", confJson)
+	fmt.Printf("config read: \n%s\n", conf.String())
 
 	logger.Info("starting TradEVE")
 	esiClient := esi.NewClient("tranquility")
@@ -92,14 +89,14 @@ func run(logger hclog.Logger, esiClient *esi.Client, itemService *item.Service, 
 	}
 	logger.Info("found types", "count", len(types))
 
-	hasActiveOrders, err := esiClient.GetMarketTypes(conf.RegionId)
+	hasActiveOrders, err := esiClient.GetMarketTypes(conf.RegionId())
 	if err != nil {
 		logger.Error("error fetching market types", "error", err)
 		os.Exit(0)
 	}
 
 	types = types.Active(hasActiveOrders)
-	logger.Info("types with active orders in region", "count", len(types), "region", conf.RegionId)
+	logger.Info("types with active orders in region", "count", len(types), "region", conf.RegionId())
 
 	types = types.ExcludeGroups(conf.ExcludeGroups)
 	logger.Info("types after removing exclude groups", "count", len(types))
@@ -110,7 +107,7 @@ func run(logger hclog.Logger, esiClient *esi.Client, itemService *item.Service, 
 	estimatedRunTime := (int64(esi.MarketHistoryCallTime) * int64(depth)) + int64(esi.MarketOrdersCallTime)*int64(depth)
 	logger.Info("fetching market history and active orders for items", "count", depth)
 	logger.Info("estimated run time (if cache empty or first run of the day)", "time", time.Duration(estimatedRunTime))
-	items := itemService.GetItems(types, conf.Region.Id, conf.HistoryDays)
+	items := itemService.GetItems(types, conf.RegionId(), conf.HistoryDays)
 
 	elapsed := time.Since(start)
 
@@ -122,19 +119,4 @@ func run(logger hclog.Logger, esiClient *esi.Client, itemService *item.Service, 
 	logger.Info("average ESI request time", "seconds", fmt.Sprintf("%.2f", elapsed.Seconds()/float64(esiClient.Calls())))
 
 	a.Print(analysis.SortFromString(conf.SortBy))
-}
-
-func prettyJson(in any) (string, error) {
-	data, err := json.Marshal(in)
-	if err != nil {
-		return "", err
-	}
-
-	var prettyJSON bytes.Buffer
-	err = json.Indent(&prettyJSON, data, "", "\t")
-	if err != nil {
-		return "", err
-	}
-
-	return prettyJSON.String(), nil
 }

@@ -1,6 +1,7 @@
 package config
 
 import (
+	"bytes"
 	"encoding/json"
 	"flag"
 	"fmt"
@@ -19,8 +20,7 @@ type Configuration struct {
 	// Download the SDE file even if it exists
 	ForceSDEDownload bool `json:"force_sde_download"`
 
-	RegionId int     `json:"region_id"`
-	Region   *Region `json:"-"`
+	Region string `json:"region"`
 
 	BrokerFeeBuy  float64 `json:"broker_fee_buy"`
 	BrokerFeeSell float64 `json:"broker_fee_sell"`
@@ -73,7 +73,7 @@ func DefaultConfig() *Configuration {
 		LogLevel:         "info",
 		CacheEnabled:     true,
 		ForceSDEDownload: false,
-		RegionId:         10000002,
+		Region:           "The Forge",
 		BrokerFeeBuy:     0.005,
 		BrokerFeeSell:    0.015,
 		SalesTax:         0.0202,
@@ -100,9 +100,11 @@ func DefaultConfig() *Configuration {
 		},
 	}
 
-	config.Region = regions.GetRegionById(config.RegionId)
-
 	return config
+}
+
+func (c *Configuration) RegionId() int {
+	return regions[c.Region]
 }
 
 // PartialConfiguration is used for unmarshaling and selectively updating
@@ -110,7 +112,7 @@ type PartialConfiguration struct {
 	LogLevel         *string        `json:"log_level"`
 	CacheEnabled     *bool          `json:"cache_enabled"`
 	ForceSdeDownload *bool          `json:"force_sde_download"`
-	RegionId         *int           `json:"region_id"`
+	Region           *string        `json:"region"`
 	BrokerFeeBuy     *float64       `json:"broker_fee_buy"`
 	BrokerFeeSell    *float64       `json:"broker_fee_sell"`
 	SalesTax         *float64       `json:"sales_tax"`
@@ -139,8 +141,8 @@ func ParseConfigFile(configFileName string, config *Configuration) (*Configurati
 	if partial.ForceSdeDownload != nil {
 		config.ForceSDEDownload = *partial.ForceSdeDownload
 	}
-	if partial.RegionId != nil {
-		config.RegionId = *partial.RegionId
+	if partial.Region != nil {
+		config.Region = *partial.Region
 	}
 	if partial.BrokerFeeBuy != nil {
 		config.BrokerFeeBuy = *partial.BrokerFeeBuy
@@ -163,8 +165,6 @@ func ParseConfigFile(configFileName string, config *Configuration) (*Configurati
 	if partial.ExcludeGroups != nil {
 		config.ExcludeGroups = partial.ExcludeGroups
 	}
-
-	config.Region = regions.GetRegionById(config.RegionId)
 
 	return config, nil
 }
@@ -189,4 +189,28 @@ func ParseFlags(config *Configuration) *Configuration {
 	}
 
 	return config
+}
+
+func (c *Configuration) Validate() error {
+	return nil
+}
+
+func (c *Configuration) String() string {
+	s, _ := prettyJson(c)
+	return s
+}
+
+func prettyJson(in any) (string, error) {
+	data, err := json.Marshal(in)
+	if err != nil {
+		return "", err
+	}
+
+	var prettyJSON bytes.Buffer
+	err = json.Indent(&prettyJSON, data, "", "\t")
+	if err != nil {
+		return "", err
+	}
+
+	return prettyJSON.String(), nil
 }
