@@ -53,7 +53,7 @@ Analysis complete. 10 items match criteria over the last 3 days (daily average):
 | **SCORE**     | A combined score, LPDP divided by the amount of flippers.                                             |
 | **LPDP**      | Largest Possible Daily Profit: The maximum potential profit from trading the item daily, in ISK.      |
 | **MARGIN**    | Profit margin percentage, after taxes and fees are deducted.                                          |
-| **TAKE HOME** | Net profit of flipping.                                                                               |
+| **TAKE HOME** | Net profit of flipping. Take home = Spread - Broker's fees - Sales tax                                |
 | **ITEM**      | Item name.                                                                                            |
 | **PRICE**     | Average price.                                                                                        |
 | **VOLUME**    | The daily trading volume of the item.                                                                 |
